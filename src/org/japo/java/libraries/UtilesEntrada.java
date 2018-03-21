@@ -167,4 +167,24 @@ public class UtilesEntrada {
         // Devolver dato
         return "" + num + ctr;
     }
+    
+    public static final char leerOpcion(String opciones, String msgUsr, String msgErr) {
+        char dato = 0;
+        boolean lecturaOK = false;
+        do {
+            try {
+                System.out.print(msgUsr);
+                dato = SCN.nextLine().charAt(0);
+
+                if (opciones.contains(dato + "")) {
+                    lecturaOK = true;
+                } else {
+                    System.out.println(msgErr);
+                }
+            } catch (Exception e) {
+                System.out.println(msgErr);
+            }
+        } while (!lecturaOK);
+        return dato;
+    }
 }

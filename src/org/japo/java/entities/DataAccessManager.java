@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.japo.java.libraries.UtilesEntrada;
 
 /**
  *
@@ -27,6 +28,9 @@ import java.sql.Statement;
 public class DataAccessManager {
 
     // Sentencias SQL
+    public static final String CAB_REG_MOD1 = "Proceso de Borrado - Registro %02d";
+    public static final String CAB_REG_MOD2 = "===============================";
+    public static final String DEF_MOD_SQL1 = "SELECT * FROM modulo";
     private static final String DEF_SQL_MOD = "SELECT * FROM modulo";
     private static final String DEF_SQL_ALU = "SELECT * FROM alumno";
     private static final String DEF_SQL_PRO = "SELECT * FROM profesor";
@@ -137,6 +141,36 @@ public class DataAccessManager {
 
             // Separación
             System.out.println("---");
+        }
+    }
+    
+    public final void borrarModulosInteractivo()
+            throws SQLException {
+        System.out.println("Borrado de módulos ...");
+        System.out.println("---");
+        try (ResultSet rs = stmt.executeQuery(DEF_MOD_SQL1)) {
+            int regBorrados = 0;
+            while (rs.next()) {
+                System.out.printf(CAB_REG_MOD1 + "%n", rs.getRow());
+                System.out.println(CAB_REG_MOD2);
+                System.out.printf("Id ...........:%d%n", rs.getInt(1));
+                System.out.printf("Acrónimo .....:%s%n", rs.getString(2));
+                System.out.printf("Nombre .......:%s%n", rs.getString(3));
+                System.out.printf("Código .......:%s%n", rs.getString(4));
+                System.out.printf("Horas Curso ..:%d%n", rs.getInt(5));
+                System.out.printf("Curso ........:%d%n", rs.getInt(6));
+
+                char respuesta = UtilesEntrada.leerOpcion("SsNn", "Borrar Modulo (S/N)...:",
+                        "ERROR: Entrada Incorrecta");
+                if (respuesta == 'S' || respuesta == 's') {
+                    rs.deleteRow();
+                    regBorrados++;
+                    System.out.println("---");
+                    System.out.println("Modulo actual borrado");
+                }
+                System.out.println("---");
+            }
+            System.out.printf("Se han borrado %d modulos &n", regBorrados);
         }
     }
 }
